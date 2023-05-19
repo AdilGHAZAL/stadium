@@ -23,14 +23,18 @@ router.get("/:id", async (req, res) => {
 
 // This section will help you create a new record.
 router.post("/", async (req, res) => {
-  let newDocument = {
-    name: req.body.name,
-    position: req.body.position,
-    level: req.body.level,
+  let newStadium = {
+    city: req.body.city,
+    sport: req.body.sport,
   };
-  let collection = await db.collection("records");
-  let result = await collection.insertOne(newDocument);
-  res.send(result).status(204);
+  let collection = await db.collection("stadiums");
+  let result = await collection.insertOne(newStadium);
+  if (result.insertedId !== null ){
+    res.send(newStadium).status(204)
+  } else{
+    res.send("service not available right now. please try later").status(500);
+  }
+  
 });
 
 // This section will help you update a record by id.
@@ -38,9 +42,8 @@ router.patch("/:id", async (req, res) => {
   const query = { _id: new ObjectId(req.params.id) };
   const updates =  {
     $set: {
-      name: req.body.name,
-      position: req.body.position,
-      level: req.body.level
+      city: req.body.name,
+      sport: req.body.sport,
     }
   };
 
@@ -59,5 +62,7 @@ router.delete("/:id", async (req, res) => {
 
   res.send(result).status(200);
 });
+
+router
 
 export default router;
